@@ -1,26 +1,30 @@
-# Python CircleCI 2.0 configuration file
-version: 2
+
+version: 2.1
+
+orbs:
+ 
+  python: circleci/python@1.5.0
+
+
 jobs:
-  build:
+  build-and-test: 
     docker:
-      - image: circleci/python:3.11
-
-    working_directory: ~/repo
-
-
+      - image: cimg/python:3.10.2
+   
     steps:
-      # Step 1: obtain repo from GitHub
       - checkout
-      # Step 2: create virtual env install dependencies
+      - python/install-packages:
+          pkg-manager: pip
+          
       - run:
-          name: install dependencies
-          command: | 
-            python3 -m venv venv
-            . venv/bin/activate
-            pip install -r requirements.txt
-      # Step 3: run linter and tests
-      - run:
+            name: install dependencies
+            command: | 
+              python3 -m venv venv
+              . venv/bin/activate
+              pip install -r requirements.txt
+      - run:    
         name: run tests
         command: |
         . venv/bin/activate
-        pytest -v 
+        pytest -v          
+#
